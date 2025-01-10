@@ -54,17 +54,33 @@ class WaterSummaryWidgetState extends State<WaterSummaryWidget> {
                           if (snapshot.hasData) {
                             final data = snapshot.data!.snapshot.value as Map?;
                             if (data != null) {
-                              String pressure = "${data['pressure'] ?? 0} PSI";
-                              String flowRate =
-                                  "${data['flow_rate'] ?? 0} L/MIN";
+                              double avgFlowRateA =
+                                  ((data['flow_rate_a_1'] ?? 0.0) +
+                                          (data['flow_rate_a_2'] ?? 0.0)) /
+                                      2;
+                              double avgFlowRateB =
+                                  ((data['flow_rate_b_1'] ?? 0.0) +
+                                          (data['flow_rate_b_2'] ?? 0.0)) /
+                                      2;
+                              double avgFlowRateC =
+                                  ((data['flow_rate_c_1'] ?? 0.0) +
+                                          (data['flow_rate_c_2'] ?? 0.0)) /
+                                      2;
 
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  _buildDataRow("Water Pressure", pressure),
-                                  SizedBox(height: 16),
-                                  _buildDataRow("Water Flow Rate", flowRate),
-                                ],
+                              return SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildDataRow("Average Flow Rate Zone A",
+                                        "${avgFlowRateA.toStringAsFixed(2)} L/min"),
+                                    SizedBox(height: 16),
+                                    _buildDataRow("Average Flow Rate Zone B",
+                                        "${avgFlowRateB.toStringAsFixed(2)} L/min"),
+                                    SizedBox(height: 16),
+                                    _buildDataRow("Average Flow Rate Zone C",
+                                        "${avgFlowRateC.toStringAsFixed(2)} L/min"),
+                                  ],
+                                ),
                               );
                             }
                           }
@@ -94,9 +110,9 @@ class WaterSummaryWidgetState extends State<WaterSummaryWidget> {
                               Row(
                                 children: [
                                   Icon(Icons.circle,
-                                      color: AppColors.background, size: 12),
+                                      color: AppColors.primary, size: 12),
                                   SizedBox(width: 4),
-                                  Text("Water Pressure",
+                                  Text("Flow Rate Zone A",
                                       style: TextStyle(fontSize: 16)),
                                 ],
                               ),
@@ -104,9 +120,19 @@ class WaterSummaryWidgetState extends State<WaterSummaryWidget> {
                               Row(
                                 children: [
                                   Icon(Icons.circle,
-                                      color: AppColors.primary, size: 12),
+                                      color: Colors.green, size: 12),
                                   SizedBox(width: 4),
-                                  Text("Water Flow Rate",
+                                  Text("Flow Rate Zone B",
+                                      style: TextStyle(fontSize: 16)),
+                                ],
+                              ),
+                              SizedBox(width: 16),
+                              Row(
+                                children: [
+                                  Icon(Icons.circle,
+                                      color: Colors.red, size: 12),
+                                  SizedBox(width: 4),
+                                  Text("Flow Rate Zone C",
                                       style: TextStyle(fontSize: 16)),
                                 ],
                               ),
@@ -114,7 +140,7 @@ class WaterSummaryWidgetState extends State<WaterSummaryWidget> {
                           ),
                         ),
                         SizedBox(height: 16),
-                        // Water Pressure and Flow Rate Chart
+                        // Flow Rate Chart
                         Expanded(
                           child: StreamBuilder<DatabaseEvent>(
                             stream: _dataStream,
@@ -132,20 +158,58 @@ class WaterSummaryWidgetState extends State<WaterSummaryWidget> {
                                   final Map<String, dynamic> chartData =
                                       Map<String, dynamic>.from(data);
 
-                                  String formattedTimestamp = _formatTimestamp(
-                                      chartData['last_update']);
+                                  String formattedTimestamp =
+                                      chartData['last_update'] != null
+                                          ? _formatTimestamp(
+                                              chartData['last_update'])
+                                          : 'N/A';
 
                                   _ChartData newData = _ChartData(
                                     formattedTimestamp,
-                                    chartData['pressure'] ?? 0.0,
-                                    chartData['flow_rate'] ?? 0.0,
+                                    chartData['flow_rate_a_1'] ?? 0.0,
+                                    chartData['flow_rate_a_2'] ?? 0.0,
+                                    chartData['flow_rate_b_1'] ?? 0.0,
+                                    chartData['flow_rate_b_2'] ?? 0.0,
+                                    chartData['flow_rate_c_1'] ?? 0.0,
+                                    chartData['flow_rate_c_2'] ?? 0.0,
                                   );
 
                                   _updateCache(formattedTimestamp, newData);
 
-                                  _chartData = _dataCache.values.toList();
-
-                                  return _buildChart(_chartData);
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((_) {
+                                    setState(() {
+                                      _chartData = _dataCache.values.toList();
+                                    });
+                                  });
+                                  return Column(
+                                    children: [
+                                      Expanded(
+                                        child: _buildChart(
+                                            _chartData,
+                                            AppColors.primary,
+                                            'Flow Rate Zone A',
+                                            (data) => data.flowRateA1,
+                                            (data) => data.flowRateA2),
+                                      ),
+                                      Expanded(
+                                        child: _buildChart(
+                                            _chartData,
+                                            Colors.green,
+                                            'Flow Rate Zone B',
+                                            (data) => data.flowRateB1,
+                                            (data) => data.flowRateB2),
+                                      ),
+                                      Expanded(
+                                        child: _buildChart(
+                                            _chartData,
+                                            Colors.red,
+                                            'Flow Rate Zone C',
+                                            (data) => data.flowRateC1,
+                                            (data) => data.flowRateC2),
+                                      ),
+                                    ],
+                                  );
                                 }
                               }
                               return Center(child: Text("No data available"));
@@ -194,7 +258,12 @@ class WaterSummaryWidgetState extends State<WaterSummaryWidget> {
     }
   }
 
-  Widget _buildChart(List<_ChartData> chartData) {
+  Widget _buildChart(
+      List<_ChartData> chartData,
+      Color color,
+      String name,
+      double Function(_ChartData) yValueMapper1,
+      double Function(_ChartData) yValueMapper2) {
     return SfCartesianChart(
       primaryXAxis: CategoryAxis(
         majorGridLines: const MajorGridLines(color: Colors.transparent),
@@ -212,7 +281,6 @@ class WaterSummaryWidgetState extends State<WaterSummaryWidget> {
         tooltipSettings: InteractiveTooltip(
           color: Colors.blue,
           textStyle: TextStyle(color: Colors.white),
-          // Custom Tooltip Formatter to display timestamp and values
         ),
         activationMode: ActivationMode.singleTap,
         lineColor: Colors.blue.withAlpha(100),
@@ -223,20 +291,20 @@ class WaterSummaryWidgetState extends State<WaterSummaryWidget> {
       ),
       series: <CartesianSeries>[
         SplineSeries<_ChartData, String>(
-          name: 'Water Pressure',
-          color: AppColors.background,
+          name: name,
+          color: color,
           dataSource: chartData,
           xValueMapper: (_ChartData data, _) => data.timestamp,
-          yValueMapper: (_ChartData data, _) => data.waterPressure,
+          yValueMapper: (_ChartData data, _) => yValueMapper1(data),
           markerSettings: MarkerSettings(isVisible: true),
           enableTooltip: true,
         ),
         SplineSeries<_ChartData, String>(
-          name: 'Water Flow Rate',
-          color: AppColors.primary,
+          name: name,
+          color: color,
           dataSource: chartData,
           xValueMapper: (_ChartData data, _) => data.timestamp,
-          yValueMapper: (_ChartData data, _) => data.waterFlowRate,
+          yValueMapper: (_ChartData data, _) => yValueMapper2(data),
           markerSettings: MarkerSettings(isVisible: true),
           enableTooltip: true,
         ),
@@ -247,8 +315,20 @@ class WaterSummaryWidgetState extends State<WaterSummaryWidget> {
 
 class _ChartData {
   final String timestamp;
-  final double waterPressure;
-  final double waterFlowRate;
+  final double flowRateA1;
+  final double flowRateA2;
+  final double flowRateB1;
+  final double flowRateB2;
+  final double flowRateC1;
+  final double flowRateC2;
 
-  _ChartData(this.timestamp, this.waterPressure, this.waterFlowRate);
+  _ChartData(
+    this.timestamp,
+    this.flowRateA1,
+    this.flowRateA2,
+    this.flowRateB1,
+    this.flowRateB2,
+    this.flowRateC1,
+    this.flowRateC2,
+  );
 }
