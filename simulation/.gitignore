@@ -1,0 +1,5 @@
+# Other examples
+# Ignore all .json files in a folder
+simulation/credentials/*.json
+
+.env
