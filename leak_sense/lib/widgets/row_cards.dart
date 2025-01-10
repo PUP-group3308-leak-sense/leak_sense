@@ -23,10 +23,10 @@ class OverviewCard extends StatefulWidget {
   });
 
   @override
-  _OverviewCardState createState() => _OverviewCardState();
+  OverviewCardState createState() => OverviewCardState();
 }
 
-class _OverviewCardState extends State<OverviewCard> {
+class OverviewCardState extends State<OverviewCard> {
   late Color _currentTextColor;
 
   @override

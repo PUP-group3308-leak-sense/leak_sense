@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:leak_sense/widgets/user_profile.dart';
 
 class Header extends StatelessWidget {
-  const Header({super.key});
+  final String email;
+  final String title;
+  const Header({super.key, required this.title, required this.email});
 
   @override
   Widget build(BuildContext context) {
@@ -16,16 +18,15 @@ class Header extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: 30.0),
               child: UserProfileWidget(
-                name: 'John Doe',
-                role: 'Plumber',
+                email: email,
               ),
             ),
           ],
         ),
         Row(
           children: [
-            const Text(
-              'Real-Time Monitoring',
+            Text(
+              title,
               style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
             ),
             Spacer()

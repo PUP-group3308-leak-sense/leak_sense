@@ -81,7 +81,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
               label: 'Dashboard',
               onTap: () {
                 _onItemTapped(0);
-                Navigator.push(context,
+                Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => DashboardPage()));
               },
             ),
@@ -93,10 +93,8 @@ class _CustomNavBarState extends State<CustomNavBar> {
               label: 'History',
               onTap: () {
                 _onItemTapped(1);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => DashboardHistoryPage()));
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LeakHistoryPage()));
               },
             ),
             const Spacer(),

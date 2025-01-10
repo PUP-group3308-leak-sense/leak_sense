@@ -187,7 +187,7 @@ class LoginPageState extends State<LoginPage> {
             child: TextButton(
               onPressed: _forgotPasswordValidator,
               child: Text(
-                'Forgot PasswordValidator?',
+                'Forgot Password?',
                 style: TextStyle(color: AppColors.textWhite),
               ),
             ),
