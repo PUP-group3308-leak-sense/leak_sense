@@ -23,9 +23,14 @@ def simulate_data():
         simulated_data = {
             "faucet_1": "ACTIVE" if random.random() > 0.5 else "INACTIVE",
             "faucet_2": "ACTIVE" if random.random() > 0.5 else "INACTIVE",
-            "flow_rate": round(random.uniform(5, 15), 1),  
-            "pressure": round(random.uniform(10, 20), 1),  
-            "temperature": round(random.uniform(20, 30), 1),  
+            "flow_rate_a_1": round(random.uniform(5, 15), 1),
+            "flow_rate_a_2": round(random.uniform(5, 15), 1),
+            "flow_rate_b_1": round(random.uniform(5, 15), 1),
+            "flow_rate_b_2": round(random.uniform(5, 15), 1),
+            "flow_rate_c_1": round(random.uniform(5, 15), 1),
+            "flow_rate_c_2": round(random.uniform(5, 15), 1),
+            "pressure": round(random.uniform(10, 20), 1),
+            "temperature": round(random.uniform(20, 30), 1),
             "volume": round(random.uniform(1, 5), 1),
             'last_update': datetime.now().isoformat()
         }
