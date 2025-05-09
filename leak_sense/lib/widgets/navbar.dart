@@ -36,7 +36,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
   Widget build(BuildContext context) {
     return Drawer(
       child: Container(
-        color: const Color(0xFF0A0A3A),
+        color:  AppColors.primary,
         padding: const EdgeInsets.only(left: 20.0),
         child: Column(
           children: [
@@ -61,7 +61,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                     TextSpan(
                       text: 'Sense',
                       style: TextStyle(
-                        color: AppColors.primary,
+                        color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Arial',
@@ -76,7 +76,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
             _buildNavItem(
               index: 0,
               icon: DashboardIcon(
-                color: _selectedIndex == 0 ? Colors.orange : Colors.grey,
+                color: _selectedIndex == 0 ? Colors.white : Colors.white.withAlpha(100),
               ),
               label: 'Dashboard',
               onTap: () {
@@ -88,7 +88,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
             _buildNavItem(
               index: 1,
               icon: SettingIcon(
-                color: _selectedIndex == 1 ? Colors.orange : Colors.grey,
+                color: _selectedIndex == 1 ? Colors.white : Colors.white.withAlpha(100),
               ),
               label: 'History',
               onTap: () {
@@ -102,7 +102,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
               index: 2,
               icon: IconTheme(
                 data: IconThemeData(
-                  color: _selectedIndex == 2 ? Colors.orange : Colors.grey,
+                  color: _selectedIndex == 2 ? Colors.white : Colors.white.withAlpha(100),
                 ),
                 child: LogOutIcon(),
               ),
@@ -138,7 +138,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
               title: Text(
                 label,
                 style: TextStyle(
-                  color: isSelected ? Colors.orange : Colors.grey,
+                  color: isSelected ? Colors.white : Colors.white.withAlpha(100),
                   fontSize: 16,
                 ),
               ),
@@ -148,7 +148,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
           Container(
             width: 4,
             height: 48,
-            color: isSelected ? Colors.orange : Colors.transparent,
+            color: isSelected ? Colors.white : Colors.transparent,
           )
         ],
       ),

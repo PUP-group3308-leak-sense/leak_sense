@@ -5,7 +5,7 @@ class TextFieldWithIcon extends StatelessWidget {
   final String labelText;
   final TextEditingController controller;
   final bool obscureText;
-  final String? inputError; // Add inputError parameter
+  final String? inputError;
 
   const TextFieldWithIcon({
     super.key,
@@ -13,15 +13,20 @@ class TextFieldWithIcon extends StatelessWidget {
     required this.labelText,
     required this.controller,
     this.obscureText = false,
-    this.inputError, // Initialize inputError
+    this.inputError,
   });
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = TextStyle(color: Colors.white);
+    final textStyle = const TextStyle(color: Colors.white);
     final height = textStyle.fontSize != null
         ? textStyle.fontSize! * 2
-        : 50.0; // Default height if fontSize is null
+        : 50.0;
+
+    // Decide border color once
+    final borderColor = inputError != null
+        ? Colors.red.shade300
+        : Colors.white;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,29 +35,34 @@ class TextFieldWithIcon extends StatelessWidget {
           height: height,
           child: TextField(
             controller: controller,
-            obscureText: obscureText, // Use obscureText parameter
-            style: textStyle, // Text color set to white
+            obscureText: obscureText,
+            style: textStyle,
+            cursorColor: Colors.white,        // ← white cursor
+            cursorWidth: 2.0,                  // ← optional: make it a bit thicker
             decoration: InputDecoration(
               labelText: labelText,
-              floatingLabelBehavior:
-                  FloatingLabelBehavior.never, // Prevent label from floating
-              labelStyle:
-                  TextStyle(color: Colors.white), // Label color set to white
-              prefixIcon: prefixIcon, // Icon on the left side
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              labelStyle: const TextStyle(color: Colors.white),
+              prefixIcon: prefixIcon,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.zero,
+                borderRadius: BorderRadius.circular(5),
                 borderSide: BorderSide(
-                  color:
-                      inputError != null ? Colors.red.shade200 : Colors.white,
-                  width: 1,
+                  color: borderColor,
+                  width: 1.5,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+                borderSide: BorderSide(
+                  color: borderColor,
+                  width: 1.5,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.zero,
+                borderRadius: BorderRadius.circular(5),
                 borderSide: BorderSide(
-                  color:
-                      inputError != null ? Colors.red.shade200 : Colors.white,
-                  width: 2,
+                  color: borderColor,
+                  width: 1.5,
                 ),
               ),
             ),
@@ -63,7 +73,7 @@ class TextFieldWithIcon extends StatelessWidget {
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(
               inputError!,
-              style: TextStyle(color: Colors.red.shade200, fontSize: 12),
+              style: TextStyle(color: Colors.red.shade300, fontSize: 12),
             ),
           ),
       ],

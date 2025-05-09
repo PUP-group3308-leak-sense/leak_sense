@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:leak_sense/theme/app_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:leak_sense/pages/log_in_page.dart';
 import 'package:leak_sense/widgets/logo.dart';
 
@@ -14,11 +14,12 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 3), () {
+    // Wait 3 seconds then navigate to LoginPage
+    Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
+          MaterialPageRoute(builder: (_) => const LoginPage()),
         );
       }
     });
@@ -27,8 +28,26 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background, // Background color
-      body: Center(child: LogoWithText()),
+      // No backgroundColor here; SVG will fill the screen
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Stack(
+            children: [
+              // SVG background fills entire screen
+              Positioned.fill(
+                child: SvgPicture.asset(
+                  'assets/login-bg.svg',
+                  fit: BoxFit.cover,
+                  width: constraints.maxWidth,
+                  height: constraints.maxHeight,
+                ),
+              ),
+              // Centered logo + text
+              Center(child: LogoWithText()),
+            ],
+          );
+        },
+      ),
     );
   }
 }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_colors.dart';
+
 class LeakSenseLogo extends StatelessWidget {
   final double size;
   final Color color;
 
-  const LeakSenseLogo({super.key, this.size = 24.0, this.color = Colors.white});
+  const LeakSenseLogo({super.key, this.size = 24.0, this.color = AppColors.primary});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class RPSCustomPainter extends CustomPainter {
     Offset center = Offset(size.width / 2, size.height / 2);
 
     // Draw the circle
-    Paint circlePaint = Paint()..color = Color(0xffFF981E);
+    Paint circlePaint = Paint()..color = Colors.white;
     canvas.drawCircle(center, radius, circlePaint);
 
     // Scale the icon to fit within the circle

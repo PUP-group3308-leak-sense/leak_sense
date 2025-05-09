@@ -5,7 +5,7 @@ class LogOutIcon extends StatelessWidget {
   final Color color;
 
   const LogOutIcon(
-      {super.key, this.size = 24.0, this.color = const Color(0xffFE981E)});
+      {super.key, this.size = 24.0, this.color = Colors.white});
 
   @override
   Widget build(BuildContext context) {
