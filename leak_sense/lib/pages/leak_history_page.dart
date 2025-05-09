@@ -44,7 +44,7 @@ class _LeakHistoryPageState extends State<LeakHistoryPage> {
     switch (status.toLowerCase()) {
       case 'fixed':
         return Colors.green;
-      case 'pending':
+      case 'active':
         return Colors.orange;
       case 'critical':
         return Colors.red;
