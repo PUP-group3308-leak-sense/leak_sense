@@ -43,7 +43,7 @@ class LogoWithText extends StatelessWidget {
                   TextSpan(
                     text: 'Sense', // "Sense" text in orange
                     style: TextStyle(
-                      color: AppColors.primary,
+                      color: AppColors.textWhite,
                       fontSize: fontSize,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Arial', // Use your preferred font

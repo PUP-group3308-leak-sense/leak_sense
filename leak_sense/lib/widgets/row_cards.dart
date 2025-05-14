@@ -6,6 +6,8 @@ import 'package:leak_sense/svg%20painter/water_valume_icon.dart';
 import 'package:leak_sense/widgets/vertical_devider.dart';
 import 'dart:async';
 
+import '../theme/app_colors.dart';
+
 class OverviewCard extends StatefulWidget {
   final String value;
   final String label;
@@ -105,7 +107,7 @@ class OverviewCardState extends State<OverviewCard> {
   // Method to change text color temporarily
   void _changeTextColorTemporarily() {
     setState(() {
-      _currentTextColor = Colors.orange; // Change text color to orange
+      _currentTextColor = AppColors.primary; // Change text coAppColors
     });
     Timer(const Duration(seconds: 1), () {
       setState(() {
