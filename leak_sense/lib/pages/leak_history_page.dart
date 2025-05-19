@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:data_table_2/data_table_2.dart';
@@ -159,6 +161,7 @@ class _LeakHistoryPageState extends State<LeakHistoryPage> {
                           .orderBy(FieldPath.documentId)
                           .snapshots(),
                       builder: (context, snapshot) {
+                        debugPrint(FieldPath.documentId.toString());
                         if (snapshot.hasError) {
                           return Center(
                               child: Text('Error: ${snapshot.error}'));
@@ -170,12 +173,13 @@ class _LeakHistoryPageState extends State<LeakHistoryPage> {
 
                         final docs = snapshot.data!.docs;
                         List<Map<String, dynamic>> leakEvents = [];
-
+                        debugPrint(docs.asMap().toString());
                         for (var doc in docs) {
                           final date = doc.id;
                           final data = doc.data() as Map<String, dynamic>;
+                          debugPrint(data.toString());
                           final leaksMap =
-                          Map<String, dynamic>.from(data['leaks'] ?? {});
+                          Map<String, dynamic>.from(data);
 
                           leaksMap.forEach((zone, leakData) {
                             if (leakData is Map<String, dynamic> &&
